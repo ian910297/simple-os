@@ -5,18 +5,17 @@ jmp start
 
 ; DATA
 ; ------------------------------------------------------------------------
-bootdrive db 0
+disk db 0x0
 msg_hello db "Hello, World", 13, 10, 0
 msg_start db 'Booting ...', 13, 10, 0
 msg_reset db 'Reseting drive ...', 13, 10, 0
-msg_a20 db "Enable a20 ..."
+msg_a20 db "Enable a20 ...", 13, 10, 0
+msg_disk db "Load disk ...", 13, 10, 0
 msg_kernel db "Loading Kernel ...", 13, 10, 0
 msg_gdt db "Loading GDT ...", 13, 10, 0
 msg_pmode db "Entering Protected Model ...", 13, 10, 0
-; ------------------------------------------------------------------------
 
 ; GDT
-; ------------------------------------------------------------------------
 gdt_pointer:
     dw gdt_end - gdt_start
     dd gdt_start
@@ -84,8 +83,21 @@ a20:
 					; if a20 open -> ax = 1
 					;        else -> ax = 0
 	jc error       	; jump if carry (according to CF value)
-	mov ax, 0x3
-	int 0x10 ; set vga text mode 3
+	;mov ax, 0x3
+	;int 0x10 ; set vga text mode 3
+load_disk:
+	mov si, msg_disk
+	call rmode_print_string
+	mov [disk], dl
+	mov ah, 0x2    ;read sectors
+	mov al, 1      ;sectors to read
+	mov ch, 0      ;cylinder idx
+	mov dh, 0      ;head idx
+	mov cl, 2      ;sector idx
+	mov dl, [disk] ;disk idx
+	mov bx, copy_target;target pointer
+	int 0x13
+	cli
 load_gdt:
 	mov si, msg_gdt
 	call rmode_print_string
@@ -94,12 +106,24 @@ pmode:
 	mov si, msg_pmode
 	call rmode_print_string
     mov eax, cr0 
-    or eax,0x1         ; set the protected mode bit on special CPU reg cr0
+    or eax, 0x1         ; set the protected mode bit on special CPU reg cr0
     mov cr0, eax
+load_data:
+	mov ax, DATA_SEG
+	mov ds, ax
+	mov es, ax
+	mov fs, ax
+	mov gs, ax
+	mov ss, ax
     jmp CODE_SEG:boot ; long jump to the code segment
-bits 32
-boot:
-    hlt
 
 times 510 - ($-$$) db 0 ; pad remaining 510 bytes with zeros
 dw 0xaa55 ; boot signature
+
+copy_target:
+bits 32
+boot:
+	cli
+    hlt
+
+times 1024 - ($-$$) db 0
