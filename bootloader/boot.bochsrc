@@ -1,0 +1,4 @@
+floppya: 1_44=boot.bin, status=inserted
+boot: floppy
+log: boot.txt
+megs: 32
