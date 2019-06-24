@@ -1,0 +1,4 @@
+floppya: 1_44=hello.bin, status=inserted
+boot: floppy
+log: hello.txt
+megs: 32
