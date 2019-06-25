@@ -1,0 +1,4 @@
+floppya: 1_44=kernel.bin, status=inserted
+boot: floppy
+log: kernel.txt
+megs: 32

@@ -1,19 +1,11 @@
+section .boot
 bits 16 ; tell NASM this is 16 bit code
-org 0x7c00 ; tell NASM to start outputting at offset 0x7c00
-
-jmp start
+global boot
+jmp boot
 
 ; DATA
 ; ------------------------------------------------------------------------
 disk db 0x0
-msg_hello db "Hello, World", 13, 10, 0
-msg_start db 'Booting ...', 13, 10, 0
-msg_reset db 'Reseting drive ...', 13, 10, 0
-msg_a20 db "Enable a20 ...", 13, 10, 0
-msg_disk db "Load disk ...", 13, 10, 0
-msg_kernel db "Loading Kernel ...", 13, 10, 0
-msg_gdt db "Loading GDT ...", 13, 10, 0
-msg_pmode db "Entering Protected Model ...", 13, 10, 0
 
 ; GDT
 gdt_pointer:
@@ -41,38 +33,9 @@ gdt_data:
 gdt_end:
 ; ------------------------------------------------------------------------
 
-; FUNCTIONS
-; ----------------------------------------------------------------------
-rmode_print_char:
-	mov ah, 0x0E	; teletype
-	mov bh, 0x00	; Page no
-	mov bl, 0x07	; text attribute: lightgrey font on black background
-	int 0x10
-	ret
-	
-rmode_print_string:
-	nextc:
-		mov al, [si]	; al = *si
-		inc si			; si++
-		cmp al, 0		; if al=0 call exit
-		je exit
-		call rmode_print_char
-		jmp nextc
-		exit: ret
-
-error:
-	hlt
-	jmp error
-; ----------------------------------------------------------------------
-
 ; main
 ; ----------------------------------------------------------------------
-start:
-    mov si, msg_hello ; point si register to hello label memory location
-	call rmode_print_string
-a20:
-	mov si, msg_a20
-	call rmode_print_string
+boot:
 	mov ax, 0x2401  ; fast a20 gate
 				   	; ah=0x24 al=0x00 -> close a20
 				   	; ah=0x24 al=0x01 -> open a20
@@ -82,12 +45,9 @@ a20:
 					; ax would get the a20 status
 					; if a20 open -> ax = 1
 					;        else -> ax = 0
-	jc error       	; jump if carry (according to CF value)
-	;mov ax, 0x3
-	;int 0x10 ; set vga text mode 3
+	mov ax, 0x3
+	int 0x10 ; set vga text mode 3
 load_disk:
-	mov si, msg_disk
-	call rmode_print_string
 	mov [disk], dl
 	mov ah, 0x2    ;read sectors
 	mov al, 1      ;sectors to read
@@ -99,12 +59,8 @@ load_disk:
 	int 0x13
 	cli
 load_gdt:
-	mov si, msg_gdt
-	call rmode_print_string
     lgdt [gdt_pointer] ; load the gdt table
 pmode:
-	mov si, msg_pmode
-	call rmode_print_string
     mov eax, cr0 
     or eax, 0x1         ; set the protected mode bit on special CPU reg cr0
     mov cr0, eax
@@ -122,8 +78,28 @@ dw 0xaa55 ; boot signature
 
 copy_target:
 bits 32
+msg_hello db "Hello, 512 World", 13, 10, 0
 boot_in_pmode:
+	mov esi, msg_hello
+	mov ebx, 0xb8000
+.loop:
+	lodsb
+	or al, al
+	jz halt
+	or eax, 0x0F00
+	mov word [ebx], ax
+	add ebx, 2
+	jmp .loop
+halt:
+c_program:
+	mov esp, kernel_stack_top
+	extern kmain
+	call kmain
 	cli
-    hlt
+	hlt
 
-times 1024 - ($-$$) db 0
+section .bss
+align 4
+kernel_stack_bottom: equ $
+	resb 16384 ; 16 KB
+kernel_stack_top:
