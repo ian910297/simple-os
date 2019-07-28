@@ -1,6 +1,5 @@
 bits 16 ; tell NASM this is 16 bit code
 org 0x7c00 ; tell NASM to start outputting at offset 0x7c00
-
 jmp start
 
 ; DATA
