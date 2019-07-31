@@ -1,3 +1,4 @@
+#include "uart.h"
 
 void kernel_main()
 {

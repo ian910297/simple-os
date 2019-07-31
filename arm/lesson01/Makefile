@@ -24,9 +24,8 @@
 #
 
 ARMGNU ?= aarch64-linux-gnu
-SRCS = $(wildcard *.c)
-OBJS = $(SRCS:.c=.o)
-CFLAGS = -Wall -O2 -ffreestanding -nostdinc -nostdlib -nostartfiles
+CFLAGS = -Wall -nostdlib -nostartfiles -ffreestanding -Iinclude -mgeneral-regs-only -MMD
+ASMFLAGS = -Iinclude -MMD
 
 BUILD_DIR = build
 SRC_DIR = src
@@ -41,7 +40,7 @@ $(BUILD_DIR)/%_c.o: $(SRC_DIR)/%.c
 	$(ARMGNU)-gcc $(CFLAGS) -c $< -o $@
 
 $(BUILD_DIR)/%_s.o: $(SRC_DIR)/%.S
-	$(ARMGNU)-gcc -c $< -o $@
+	$(ARMGNU)-gcc $(ASMFLAGS) -c $< -o $@
 
 C_FILES = $(wildcard $(SRC_DIR)/*.c)
 ASM_FILES = $(wildcard $(SRC_DIR)/*.S)
