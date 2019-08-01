@@ -10,3 +10,4 @@ I would like to apply positions about firmware or operation system, such as linu
     * [Day 3 - Lesson 01: Hardware & Kernel](https://hackmd.io/@mO7Ra9keSqOrqyP_Nknkxw/rJfmd2YfH)
     * [Day 4 - Lesson 01: ELF & Linker & Makefile](https://hackmd.io/@mO7Ra9keSqOrqyP_Nknkxw/HJIAwnFMH)
     * [Day 5 - Lesson 01: Exercises](https://hackmd.io/@mO7Ra9keSqOrqyP_Nknkxw/rkKiXRpfB)
+    * [Day 6 - Lesson 02: Introduction & Exception Level](https://hackmd.io/@mO7Ra9keSqOrqyP_Nknkxw/HJiEz0afB)
