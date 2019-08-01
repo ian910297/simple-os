@@ -1,0 +1,57 @@
+#ifndef	_PHERIPHERAL_H
+#define	_PHERIPHERAL_H
+
+#define MMIO_BASE       0x3F000000
+
+/* GPIO */
+#define GPFSEL0         (MMIO_BASE+0x00200000)
+#define GPFSEL1         (MMIO_BASE+0x00200004)
+#define GPFSEL2         (MMIO_BASE+0x00200008)
+#define GPFSEL3         (MMIO_BASE+0x0020000C)
+#define GPFSEL4         (MMIO_BASE+0x00200010)
+#define GPFSEL5         (MMIO_BASE+0x00200014)
+#define GPSET0          (MMIO_BASE+0x0020001C)
+#define GPSET1          (MMIO_BASE+0x00200020)
+#define GPCLR0          (MMIO_BASE+0x00200028)
+#define GPLEV0          (MMIO_BASE+0x00200034)
+#define GPLEV1          (MMIO_BASE+0x00200038)
+#define GPEDS0          (MMIO_BASE+0x00200040)
+#define GPEDS1          (MMIO_BASE+0x00200044)
+#define GPHEN0          (MMIO_BASE+0x00200064)
+#define GPHEN1          (MMIO_BASE+0x00200068)
+#define GPPUD           (MMIO_BASE+0x00200094)
+#define GPPUDCLK0       (MMIO_BASE+0x00200098)
+#define GPPUDCLK1       (MMIO_BASE+0x0020009C)
+/* MINI UART */
+#define AUX_ENABLES     (MMIO_BASE+0x00215004)
+#define AUX_MU_IO_REG   (MMIO_BASE+0x00215040)
+#define AUX_MU_IER_REG  (MMIO_BASE+0x00215044)
+#define AUX_MU_IIR_REG  (MMIO_BASE+0x00215048)
+#define AUX_MU_LCR_REG  (MMIO_BASE+0x0021504C)
+#define AUX_MU_MCR_REG  (MMIO_BASE+0x00215050)
+#define AUX_MU_LSR_REG  (MMIO_BASE+0x00215054)
+#define AUX_MU_MSR_REG  (MMIO_BASE+0x00215058)
+#define AUX_MU_SCRATCH  (MMIO_BASE+0x0021505C)
+#define AUX_MU_CNTL_REG (MMIO_BASE+0x00215060)
+#define AUX_MU_STAT_REG (MMIO_BASE+0x00215064)
+#define AUX_MU_BAUD_REG (MMIO_BASE+0x00215068)
+
+/* PL011 */
+//only used registers are defined
+#define UART_DATA_REG   (MMIO_BASE+0x00201000)
+#define UART_FLAG_REG   (MMIO_BASE+0x00201018)
+#define UART_IBRD_REG   (MMIO_BASE+0x00201030)
+#define UART_FBRD_REG   (MMIO_BASE+0x00201024)
+#define UART_LCRH_REG   (MMIO_BASE+0x00201028)
+#define UART_CTRL_REG   (MMIO_BASE+0x0020102C)
+
+//baudrate
+//for calculation hint see PrimeCell ® UART (PL011) Technical Reference Manual
+#define MHz 		*1000000
+#define UART_CLK	48 MHz
+#define UART_BAUD_RATE	115200
+#define UART_BAUD_DIV	((double)UART_CLK)/(16*UART_BAUD_RATE)
+#define UART_IBRD 	(unsigned int)(UART_BAUD_DIV)
+#define UART_FBRD	(unsigned int)((UART_BAUD_DIV - UART_IBRD)*64 + .5)
+
+#endif /* _PHERIPHERAL_H */
