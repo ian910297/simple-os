@@ -6,6 +6,7 @@ I would like to apply positions about firmware or operation system, such as linu
 * [x86_64 note](https://hackmd.io/EtfP0b3nQD6VP_Tb8JBx8w)
 * arm note
     * [Day 1 - Introduction & Environment](https://hackmd.io/@mO7Ra9keSqOrqyP_Nknkxw/rJSnaNxfS)
-    * [Day 2 - Lesson 01: Bootloader](https://hackmd.io/@mO7Ra9keSqOrqyP_Nknkxw/SkCUYmuMH)
-    * [Day 3 - Lesson 01: Kernel](https://hackmd.io/@mO7Ra9keSqOrqyP_Nknkxw/rJfmd2YfH)
-    * [Day 4 - Lesson 01: Linker](https://hackmd.io/@mO7Ra9keSqOrqyP_Nknkxw/HJIAwnFMH)
+    * [Day 2 - Lesson 01: Introduction & Bootloader](https://hackmd.io/@mO7Ra9keSqOrqyP_Nknkxw/SkCUYmuMH)
+    * [Day 3 - Lesson 01: Hardware & Kernel](https://hackmd.io/@mO7Ra9keSqOrqyP_Nknkxw/rJfmd2YfH)
+    * [Day 4 - Lesson 01: ELF & Linker & Makefile](https://hackmd.io/@mO7Ra9keSqOrqyP_Nknkxw/HJIAwnFMH)
+    * [Day 5 - Lesson 01: Exercises](https://hackmd.io/@mO7Ra9keSqOrqyP_Nknkxw/rkKiXRpfB)
