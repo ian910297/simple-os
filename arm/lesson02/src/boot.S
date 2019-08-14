@@ -7,11 +7,11 @@
 .globl _start
 _start:
 	mrs	x0, mpidr_el1		
-	and	x0, x0,#0xFF		// Check processor id
-	cbz	x0, master		// Hang for all non-primary CPU
+	and	x0, x0,#0xFF    // Check processor id
+	cbz	x0, master      // Hang for all non-primary CPU
 	b	proc_hang
 
-proc_hang: 
+proc_hang:
 	b 	proc_hang
 
 master:
@@ -30,17 +30,18 @@ master:
 	adr	x0, el1_entry		
 	msr	elr_el3, x0
 
-	eret				
+	eret
 
 el1_entry:
     // clear bss
-    ldr     x1, =__bss_start
-    ldr     w2, =__bss_size
-3:  cbz     w2, 4f
-    str     xzr, [x1], #8
-    sub     w2, w2, #1
-    cbnz    w2, 3b
+    adr	x0, __bss_start
+	adr	x1, __bss_end
+	sub	x1, x1, x0
+	bl 	memzero
 
-4:	mov	sp, #LOW_MEMORY
+    // set stack before our code
+    //ldr     x1, =_start
+    //mov     sp, x1
+    mov	sp, #LOW_MEMORY
 	bl	kernel_main
-	b 	proc_hang		// should never come here
+	b 	proc_hang       // should never come here

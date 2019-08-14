@@ -52,7 +52,7 @@ DEP_FILES = $(OBJ_FILES:%.o=%.d)
 
 kernel8.img: $(SRC_DIR)/linker.ld $(OBJ_FILES)
 	$(ARMGNU)-ld -nostdlib -nostartfiles -T $(SRC_DIR)/linker.ld -o $(BUILD_DIR)/kernel8.elf $(OBJ_FILES)
-	$(ARMGNU)-objcopy -O binary $(BUILD_DIR)/kernel8.elf kernel8.img
+	$(ARMGNU)-objcopy $(BUILD_DIR)/kernel8.elf -O binary kernel8.img
 
 run:
-	qemu-system-aarch64 -M raspi3 -kernel build/kernel8.elf -serial null -serial stdio
+	qemu-system-aarch64 -M raspi3 -kernel $(BUILD_DIR)/kernel8.elf -serial null -serial stdio
